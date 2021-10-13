@@ -12,16 +12,17 @@ class GameMap {
     constructor(xSize: number, ySize: number, startMapNode: MapNode, endMapNode: MapNode, wallsArray: Array<MapNode>) {
         this.startMapNode = startMapNode;
         this.endMapNode = endMapNode;
-        this.path = [startMapNode];
         this.xSize = xSize;
         this.ySize = ySize;
         this.wallsArray = wallsArray;
         this.listOfNodes = this.generateListOfNodes();
+        this.path = [this.listOfNodes.find(i => (i.type = NODE_TYPES.start))];
         this.gameMapEl = document.createElement("div");
         this.gameMapEl.id = "map";
         document.getElementById("app")?.appendChild(this.gameMapEl);
-        this.findPath();
         this.generateHTML();
+        this.findPath();
+        this.path.forEach(i => i.nodeEl.classList.add("map-path"));
     }
     generateListOfNodes(): Array<MapNode> {
         let array: Array<MapNode> = [];
@@ -40,7 +41,7 @@ class GameMap {
         }
         return array;
     }
-    generateHTML() {
+    generateHTML(): void {
         this.listOfNodes.forEach(i => {
             const nodeEl = document.createElement("div");
             switch (i.type) {
@@ -58,33 +59,45 @@ class GameMap {
                     break;
             }
             nodeEl.className = "map-el";
-            if (this.path.find(p => p.x === i.x && p.y === i.y)) nodeEl.classList.add("map-path");
             i.nodeEl = nodeEl;
             this.gameMapEl.appendChild(nodeEl);
         });
     }
+    // Implementation of A* algorithm
+    // Function responsible for finding next node on map based on possible moves and weight of this moves
     findNextMapNode(): MapNode {
         let nextNode: MapNode;
         let consideredNodes: Array<MapNode> = [];
-        const currentNode = this.path[this.path.length - 1];
-        const lastNode = this.path[this.path.length - 2];
-        let xMinus = this.listOfNodes.find(i => i.x == currentNode.x - 1 && i.y == currentNode.y);
-        let xPlus = this.listOfNodes.find(i => i.x == currentNode.x + 1 && i.y == currentNode.y);
-        let yMinus = this.listOfNodes.find(i => i.y == currentNode.y - 1 && i.x == currentNode.x);
-        let yPlus = this.listOfNodes.find(i => i.y == currentNode.y + 1 && i.x == currentNode.x);
-        xMinus && xMinus != lastNode && xMinus.type != NODE_TYPES.wall ? consideredNodes.push(xMinus) : null;
-        xPlus && xPlus != lastNode && xPlus.type != NODE_TYPES.wall ? consideredNodes.push(xPlus) : null;
-        yMinus && yMinus != lastNode && yMinus.type != NODE_TYPES.wall ? consideredNodes.push(yMinus) : null;
-        yPlus && yPlus != lastNode && yPlus.type != NODE_TYPES.wall ? consideredNodes.push(yPlus) : null;
-        consideredNodes.forEach(i => {
-            i.points = Math.abs(this.endMapNode.x - i.x) + Math.abs(this.endMapNode.y - i.y);
+        const { listOfNodes, endMapNode } = this;
+        // x, y - cords of current position (last item in path array)
+        const { x, y } = this.path[this.path.length - 1];
+        /* Array of possible moves
+           Looks for: left, right, down, up movement
+           Return node if true or undefined if x or y out of range */
+        consideredNodes = [
+            listOfNodes.find(i => i.x == x - 1 && i.y == y),
+            listOfNodes.find(i => i.x == x + 1 && i.y == y),
+            listOfNodes.find(i => i.y == y - 1 && i.x == x),
+            listOfNodes.find(i => i.y == y + 1 && i.x == x),
+        ];
+        /* Checks if:
+           1) node exist
+           2) hasn't already appeared in the path - movement cannot go backwards
+           3) node type isn't wall - movement cannot pass through the wall */
+        consideredNodes = consideredNodes.filter(node => {
+            return node && !this.path.includes(node) && node.type != NODE_TYPES.wall;
         });
+        /* Finds the node with the least path to the target based on points
+        points are counted by adding up the distance that must be traveled along the X and Y axes avoiding any obstacles
+        */
         nextNode = consideredNodes.reduce(function (prev, curr) {
-            return prev.points < curr.points ? prev : curr;
+            const previousPoints = Math.abs(endMapNode.x - prev.x) + Math.abs(endMapNode.y - prev.y);
+            const currentPoints = Math.abs(endMapNode.x - curr.x) + Math.abs(endMapNode.y - curr.y);
+            return previousPoints < currentPoints ? prev : curr;
         });
         return nextNode;
     }
-    findPath() {
+    findPath(): void {
         while (this.path[this.path.length - 1].x !== this.endMapNode.x || this.path[this.path.length - 1].y !== this.endMapNode.y) {
             this.path.push(this.findNextMapNode());
         }
