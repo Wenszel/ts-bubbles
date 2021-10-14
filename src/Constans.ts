@@ -4,12 +4,4 @@ export enum NODE_TYPES {
     start = "start",
     end = "end",
 }
-export enum COLORS {
-    red = "red",
-    blue = "blue",
-    green = "green",
-    yellow = "yellow",
-    orange = "orange",
-    pink = "pink",
-    black = "black",
-}
+export const COLORS = ["red", "green", "yellow", "blue", "purple", "grey", "black", "pink", "orange"];

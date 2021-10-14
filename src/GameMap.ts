@@ -1,67 +1,42 @@
 import MapNode from "./MapNode";
-import { NODE_TYPES } from "./Constans";
+import Bubble from "./Bubble";
+import { NODE_TYPES, COLORS } from "./Constans";
 class GameMap {
-    listOfNodes: Array<MapNode>;
-    gameMapEl: HTMLElement;
-    startMapNode: MapNode;
-    endMapNode: MapNode;
-    xSize: number;
-    ySize: number;
+    public listOfNodes: Array<MapNode>;
+    public gameMapEl: HTMLElement;
+    public startMapNode: MapNode;
+    public endMapNode: MapNode;
+    public bubblesOnMap: Array<Bubble> = [];
+    private xSize: number;
+    private ySize: number;
     wallsArray: Array<MapNode>;
     path: Array<MapNode>;
-    constructor(xSize: number, ySize: number, startMapNode: MapNode, endMapNode: MapNode, wallsArray: Array<MapNode>) {
-        this.startMapNode = startMapNode;
-        this.endMapNode = endMapNode;
+    constructor(xSize: number, ySize: number) {
         this.xSize = xSize;
         this.ySize = ySize;
-        this.wallsArray = wallsArray;
-        this.listOfNodes = this.generateListOfNodes();
-        this.path = [this.listOfNodes.find(i => (i.type = NODE_TYPES.start))];
+        this.generateMap();
+        this.generateBubble(3);
+    }
+    generateBubble(amount: number): void {
+        for (let i = 0; i < amount; i++) {
+            const mapNode = this.listOfNodes[Math.floor(Math.random() * this.listOfNodes.length)];
+            const bubble = new Bubble(mapNode, COLORS[Math.floor(Math.random() * COLORS.length)]);
+            bubble.paintOnMap();
+            this.bubblesOnMap.push(bubble);
+        }
+    }
+    // Function responsible for generating HTML map and array of map nodes
+    generateMap(): void {
         this.gameMapEl = document.createElement("div");
         this.gameMapEl.id = "map";
         document.getElementById("app")?.appendChild(this.gameMapEl);
-        this.generateHTML();
-        this.findPath();
-        this.path.forEach(i => i.nodeEl.classList.add("map-path"));
-    }
-    generateListOfNodes(): Array<MapNode> {
-        let array: Array<MapNode> = [];
-        for (let i = 0; i < this.xSize; i++) {
-            for (let j = 0; j < this.ySize; j++) {
-                if (this.wallsArray.find(w => w.x === i && w.y === j)) {
-                    array.push(new MapNode(i, j, NODE_TYPES.wall));
-                } else if (this.startMapNode.x == i && this.startMapNode.y == j) {
-                    array.push(new MapNode(i, j, NODE_TYPES.start));
-                } else if (this.endMapNode.x == i && this.endMapNode.y == j) {
-                    array.push(new MapNode(i, j, NODE_TYPES.end));
-                } else {
-                    array.push(new MapNode(i, j, NODE_TYPES.normal));
-                }
+        let listOfNodes: Array<MapNode> = [];
+        for (let x = 0; x < this.xSize; x++) {
+            for (let y = 0; y < this.ySize; y++) {
+                listOfNodes.push(new MapNode(x, y, this));
             }
         }
-        return array;
-    }
-    generateHTML(): void {
-        this.listOfNodes.forEach(i => {
-            const nodeEl = document.createElement("div");
-            switch (i.type) {
-                case NODE_TYPES.normal:
-                    nodeEl.innerHTML = `${i.x}, ${i.y}`;
-                    break;
-                case NODE_TYPES.wall:
-                    nodeEl.innerHTML = `WALL`;
-                    break;
-                case NODE_TYPES.start:
-                    nodeEl.innerHTML = `A`;
-                    break;
-                case NODE_TYPES.end:
-                    nodeEl.innerHTML = `B`;
-                    break;
-            }
-            nodeEl.className = "map-el";
-            i.nodeEl = nodeEl;
-            this.gameMapEl.appendChild(nodeEl);
-        });
+        this.listOfNodes = listOfNodes;
     }
     // Implementation of A* algorithm
     // Function responsible for finding next node on map based on possible moves and weight of this moves
