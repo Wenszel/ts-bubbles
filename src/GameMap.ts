@@ -119,7 +119,8 @@ class GameMap {
             }, time as number);
         }
     }
-    checkForCrushed() {
+    checkForCrushed(): Boolean {
+        let returnValue = false;
         const answerArray: Bubble[][] = [];
         this.bubblesOnMap.forEach(i => {
             let arrayOfSameColor: Bubble[][] = [[i], [i], [i], [i]];
@@ -183,9 +184,11 @@ class GameMap {
                 if (index != -1) {
                     this.game.increaseScore();
                     this.bubblesOnMap.splice(index, 1);
+                    returnValue = true;
                 }
             });
         });
+        return returnValue;
     }
 }
 export default GameMap;
