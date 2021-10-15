@@ -16,8 +16,12 @@ class MapNode implements MapObject {
         this.nodeEl.addEventListener("click", () => {
             // Is any bubble selected
             if (!this.map.selectedBubble) {
-                this.map.selectedBubble = this.map.bubblesOnMap.find(i => i.mapNode == this);
-                this.map.selectedBubble?.bubbleEl.classList.toggle("selected-bubble");
+                const bubble = this.map.bubblesOnMap.find(i => i.mapNode == this);
+                // Checks if the bubble has possible move to do
+                if (this.map.findNextMapNode([bubble.mapNode], [])) {
+                    this.map.selectedBubble = bubble;
+                    this.map.selectedBubble?.bubbleEl.classList.toggle("selected-bubble");
+                }
             }
             // If bubble isn't selected
             else if (this == this.map.selectedBubble?.mapNode) {
@@ -41,8 +45,8 @@ class MapNode implements MapObject {
             }
         });
         this.nodeEl.addEventListener("mouseenter", () => {
+            this.map.endMapNode = this;
             if (this.map.selectedBubble) {
-                this.map.endMapNode = this;
                 const path = this.map.findPath();
                 if (path) this.map.colorPath(path as Array<MapNode>, "pink", TIME.always);
             }
