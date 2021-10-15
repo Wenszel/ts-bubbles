@@ -1,2 +1,2 @@
-import GameMap from "./GameMap";
-const gameMap = new GameMap(9, 9);
+import Game from "./Game";
+const game = new Game();

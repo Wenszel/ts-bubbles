@@ -30,6 +30,7 @@ class MapNode implements MapObject {
                 this.map.endMapNode = this;
                 if (this.map.findPath()) {
                     this.map.selectedBubble.moveBubble();
+                    this.map.game.nextRound();
                 } else {
                     this.map.endMapNode = null;
                 }

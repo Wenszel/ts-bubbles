@@ -1,10 +1,16 @@
 body {
     background-color: rgb(32, 32, 32);
 }
+#app {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
 #map {
     display: grid;
-    width: 250px;
-    height: 250px;
+    width: 450px;
+    height: 450px;
     grid-template-columns: auto auto auto auto auto auto auto auto auto;
 }
 .map-el {
@@ -23,6 +29,19 @@ body {
     width: 60%;
     height: 60%;
     border-radius: 50%;
+}
+.preview-bubble {
+    border: 1px solid black;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+#preview {
+    margin: 100px;
+    display: flex;
+    flex-direction: row;
+    height: 100px;
+    width: 300px;
 }
 .selected-bubble {
     width: 100% !important;

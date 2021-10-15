@@ -1,6 +1,7 @@
 import MapNode from "./MapNode";
 import Bubble from "./Bubble";
-import { COLORS } from "./Constans";
+import Game from "./Game";
+
 class GameMap {
     public listOfNodes: Array<MapNode>;
     public gameMapEl: HTMLElement;
@@ -8,22 +9,23 @@ class GameMap {
     public endMapNode: MapNode;
     public bubblesOnMap: Array<Bubble> = [];
     public selectedBubble: Bubble | null;
+    public game: Game;
     private xSize: number;
     private ySize: number;
-    constructor(xSize: number, ySize: number) {
+    constructor(xSize: number, ySize: number, game: Game) {
         this.xSize = xSize;
         this.ySize = ySize;
+        this.game = game;
         this.generateMap();
-        this.generateBubble(20);
     }
     // Generates bubbles on map based on given quantity
-    generateBubble(quantity: number): void {
-        for (let i = 0; i < quantity; i++) {
+    generateBubble(arrayOfColors: Array<string>): void {
+        arrayOfColors.forEach(color => {
             const mapNode = this.listOfNodes[Math.floor(Math.random() * this.listOfNodes.length)];
             if (!this.bubblesOnMap.find(bubble => bubble.mapNode === mapNode)) {
-                this.bubblesOnMap.push(new Bubble(mapNode, COLORS[Math.floor(Math.random() * COLORS.length)], this));
+                this.bubblesOnMap.push(new Bubble(mapNode, color, this));
             }
-        }
+        });
     }
     // Function responsible for generating HTML map and array of map nodes
     generateMap(): void {
