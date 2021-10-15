@@ -22,6 +22,12 @@ class MapNode implements MapObject {
             else if (this == this.map.selectedBubble?.mapNode) {
                 this.map.selectedBubble.bubbleEl.classList.remove("selected-bubble");
                 this.map.selectedBubble = null;
+            } 
+            // If bubble is selected and clicked on another bubble
+            else if (!this.map.endMapNode && this.map.bubblesOnMap.find(i => i.mapNode == this)) {
+                this.map.selectedBubble.bubbleEl.classList.remove("selected-bubble");
+                this.map.selectedBubble = this.map.bubblesOnMap.find(i => i.mapNode == this);
+                this.map.selectedBubble.bubbleEl.classList.toggle("selected-bubble");
             }
             // If click isn't on other bubble
             else if (!this.map.endMapNode && !this.map.bubblesOnMap.find(i => i.mapNode == this)) {
@@ -34,6 +40,7 @@ class MapNode implements MapObject {
                 }
             }
         });
+        this.nodeEl.addEventListener("mouseenter", () => {});
         document.getElementById("map").appendChild(this.nodeEl);
     }
 }
