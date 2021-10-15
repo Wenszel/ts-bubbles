@@ -17,6 +17,9 @@ class Bubble {
         this.bubbleEl.style.backgroundColor = this.color;
         this.mapNode.nodeEl.appendChild(this.bubbleEl);
     }
+    removeFromMap() {
+        this.bubbleEl.remove();
+    }
     moveBubble() {
         this.map.selectedBubble = null;
         this.mapNode.nodeEl.innerHTML = "";

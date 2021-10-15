@@ -39,8 +39,10 @@ class Game {
         return arrayOfColors;
     }
     nextRound() {
+        this.map.checkForCrushed();
         this.map.selectedBubble = null;
         this.map.generateBubble(this.previewBubbles);
+        this.map.checkForCrushed();
         this.changePreviewBubbles(this.drawBubbleColors(3));
     }
 }

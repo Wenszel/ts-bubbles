@@ -1,11 +1,9 @@
 import MapObject from "./interfaces/MapObject";
 import GameMap from "./GameMap";
-import Bubble from "./Bubble";
 class MapNode implements MapObject {
     private map: GameMap;
     public x: number;
     public y: number;
-    public bubble: Bubble;
     public nodeEl: HTMLElement;
 
     constructor(x: number, y: number, map: GameMap) {

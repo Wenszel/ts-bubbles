@@ -112,5 +112,70 @@ class GameMap {
         }, 1000);
         return true;
     }
+    checkForCrushed() {
+        const answerArray: Bubble[][] = [];
+        this.bubblesOnMap.forEach(i => {
+            let arrayOfSameColor: Bubble[][] = [[i], [i], [i], [i]];
+            let iterator = 1;
+            let baseColor = i.color;
+            // x+
+            while (this.bubblesOnMap.find(j => j.mapNode.x == i.mapNode.x + iterator && j.mapNode.y === i.mapNode.y)?.color === baseColor) {
+                arrayOfSameColor[0].push(this.bubblesOnMap.find(j => j.mapNode.x == i.mapNode.x + iterator && j.mapNode.y === i.mapNode.y));
+                iterator++;
+            }
+            // x-
+            iterator = 1;
+            while (this.bubblesOnMap.find(j => j.mapNode.x == i.mapNode.x - iterator && j.mapNode.y === i.mapNode.y)?.color === baseColor) {
+                arrayOfSameColor[0].push(this.bubblesOnMap.find(j => j.mapNode.x == i.mapNode.x - iterator && j.mapNode.y === i.mapNode.y));
+                iterator++;
+            }
+            // y+
+            iterator = 1;
+            while (this.bubblesOnMap.find(j => j.mapNode.y == i.mapNode.y + iterator && j.mapNode.x === i.mapNode.x)?.color === baseColor) {
+                arrayOfSameColor[1].push(this.bubblesOnMap.find(j => j.mapNode.y == i.mapNode.y + iterator && j.mapNode.x === i.mapNode.x));
+                iterator++;
+            }
+            //y-
+            iterator = 1;
+            while (this.bubblesOnMap.find(j => j.mapNode.y == i.mapNode.y - iterator && j.mapNode.x === i.mapNode.x)?.color === baseColor) {
+                arrayOfSameColor[1].push(this.bubblesOnMap.find(j => j.mapNode.y == i.mapNode.y - iterator && j.mapNode.x === i.mapNode.x));
+                iterator++;
+            }
+            //y+ x-
+            iterator = 1;
+            while (this.bubblesOnMap.find(j => j.mapNode.y == i.mapNode.y + iterator && j.mapNode.x == i.mapNode.x - iterator)?.color === baseColor) {
+                arrayOfSameColor[2].push(this.bubblesOnMap.find(j => j.mapNode.y == i.mapNode.y + iterator && j.mapNode.x == i.mapNode.x - iterator));
+                iterator++;
+            }
+            //y- x-
+            iterator = 1;
+            while (this.bubblesOnMap.find(j => j.mapNode.y == i.mapNode.y - iterator && j.mapNode.x == i.mapNode.x - iterator)?.color === baseColor) {
+                arrayOfSameColor[3].push(this.bubblesOnMap.find(j => j.mapNode.y == i.mapNode.y - iterator && j.mapNode.x == i.mapNode.x - iterator));
+                iterator++;
+            }
+            //y+ x+
+            iterator = 1;
+            while (this.bubblesOnMap.find(j => j.mapNode.y == i.mapNode.y + iterator && j.mapNode.x == i.mapNode.x + iterator)?.color === baseColor) {
+                arrayOfSameColor[3].push(this.bubblesOnMap.find(j => j.mapNode.y == i.mapNode.y + iterator && j.mapNode.x == i.mapNode.x + iterator));
+                iterator++;
+            }
+            //y+ x-
+            iterator = 1;
+            while (this.bubblesOnMap.find(j => j.mapNode.y == i.mapNode.y + iterator && j.mapNode.x == i.mapNode.x - iterator)?.color === baseColor) {
+                arrayOfSameColor[2].push(this.bubblesOnMap.find(j => j.mapNode.y == i.mapNode.y + iterator && j.mapNode.x == i.mapNode.x - iterator));
+                iterator++;
+            }
+            arrayOfSameColor.forEach(i => {
+                i.length >= 3 ? answerArray.push(i) : null;
+            });
+        });
+        answerArray.forEach(i => {
+            i.forEach(j => {
+                j.removeFromMap();
+                const index: number = this.bubblesOnMap.indexOf(j);
+                index != -1 ? this.bubblesOnMap.splice(index, 1) : null;
+            });
+        });
+    }
 }
 export default GameMap;
