@@ -1,11 +1,13 @@
 import MapObject from "./interfaces/MapObject";
 import GameMap from "./GameMap";
-
+import Bubble from "./Bubble";
 class MapNode implements MapObject {
-    map: GameMap;
+    private map: GameMap;
     public x: number;
     public y: number;
+    public bubble: Bubble;
     public nodeEl: HTMLElement;
+
     constructor(x: number, y: number, map: GameMap) {
         this.x = x;
         this.y = y;
@@ -13,12 +15,24 @@ class MapNode implements MapObject {
         this.nodeEl = document.createElement("div");
         this.nodeEl.className = "map-el";
         this.nodeEl.addEventListener("click", () => {
+            // Is any bubble selected
             if (!this.map.selectedBubble) {
                 this.map.selectedBubble = this.map.bubblesOnMap.find(i => i.mapNode == this);
-            } else if (!this.map.endMapNode) {
+                this.map.selectedBubble?.bubbleEl.classList.toggle("selected-bubble");
+            }
+            // If bubble isn't selected
+            else if (this == this.map.selectedBubble?.mapNode) {
+                this.map.selectedBubble.bubbleEl.classList.remove("selected-bubble");
+                this.map.selectedBubble = null;
+            }
+            // If click isn't on other bubble
+            else if (!this.map.endMapNode && !this.map.bubblesOnMap.find(i => i.mapNode == this)) {
                 this.map.endMapNode = this;
-                this.map.findPath();
-                this.map.selectedBubble.moveBubble();
+                if (this.map.findPath()) {
+                    this.map.selectedBubble.moveBubble();
+                } else {
+                    this.map.endMapNode = null;
+                }
             }
         });
         document.getElementById("map").appendChild(this.nodeEl);

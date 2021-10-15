@@ -87,7 +87,7 @@ class GameMap {
         // The array of nodes that have been visited and led to the no-exit road
         const exceptions: Array<MapNode> = [];
         // Until the last element of the path differs from the endpoint
-        while (path[path.length - 1].x !== this.endMapNode.x || path[path.length - 1].y !== this.endMapNode.y) {
+        while (path[path.length - 1]?.x !== this.endMapNode.x || path[path.length - 1]?.y !== this.endMapNode.y) {
             // The path length will be zero when there is no way to the destination
             // because every time we don't find our way, we remove the wrong move from the path
             if (path.length > 0) {
@@ -103,7 +103,7 @@ class GameMap {
                 return false;
             }
         }
-        // Colors the path
+        // Colors the path for second
         path.forEach(i => i.nodeEl.classList.add("map-path"));
         setTimeout(() => {
             path.forEach(i => i.nodeEl.classList.remove("map-path"));

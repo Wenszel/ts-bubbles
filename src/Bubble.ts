@@ -16,20 +16,13 @@ class Bubble {
         this.bubbleEl.className = "bubble";
         this.bubbleEl.style.backgroundColor = this.color;
         this.mapNode.nodeEl.appendChild(this.bubbleEl);
-        this.bubbleEl.addEventListener("click", () => {
-            if (this.bubbleEl.classList.contains("selected-bubble")) {
-                this.bubbleEl.classList.remove("selected-bubble");
-            } else {
-                this.map.selectedBubble?.bubbleEl.classList.remove("selected-bubble");
-                this.bubbleEl.classList.add("selected-bubble");
-            }
-        });
     }
     moveBubble() {
         this.map.selectedBubble = null;
         this.mapNode.nodeEl.innerHTML = "";
         this.mapNode = this.map.endMapNode;
         this.mapNode.nodeEl.appendChild(this.bubbleEl);
+        this.bubbleEl.classList.remove("selected-bubble");
         this.map.endMapNode = null;
     }
 }
