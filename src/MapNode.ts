@@ -13,13 +13,12 @@ class MapNode implements MapObject {
         this.nodeEl = document.createElement("div");
         this.nodeEl.className = "map-el";
         this.nodeEl.addEventListener("click", () => {
-            if (!map.startMapNode) {
-                this.nodeEl.innerHTML = "A";
-                this.map.startMapNode = this;
-            } else if (!map.endMapNode) {
-                this.nodeEl.innerHTML = "B";
+            if (!this.map.selectedBubble) {
+                this.map.selectedBubble = this.map.bubblesOnMap.find(i => i.mapNode == this);
+            } else if (!this.map.endMapNode) {
                 this.map.endMapNode = this;
                 this.map.findPath();
+                this.map.selectedBubble.moveBubble();
             }
         });
         document.getElementById("map").appendChild(this.nodeEl);

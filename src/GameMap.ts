@@ -7,6 +7,7 @@ class GameMap {
     public startMapNode: MapNode;
     public endMapNode: MapNode;
     public bubblesOnMap: Array<Bubble> = [];
+    public selectedBubble: Bubble | null;
     private xSize: number;
     private ySize: number;
     constructor(xSize: number, ySize: number) {
@@ -20,9 +21,7 @@ class GameMap {
         for (let i = 0; i < quantity; i++) {
             const mapNode = this.listOfNodes[Math.floor(Math.random() * this.listOfNodes.length)];
             if (!this.bubblesOnMap.find(bubble => bubble.mapNode === mapNode)) {
-                const bubble = new Bubble(mapNode, COLORS[Math.floor(Math.random() * COLORS.length)]);
-                bubble.paintOnMap();
-                this.bubblesOnMap.push(bubble);
+                this.bubblesOnMap.push(new Bubble(mapNode, COLORS[Math.floor(Math.random() * COLORS.length)], this));
             }
         }
     }
@@ -84,7 +83,7 @@ class GameMap {
        - false if the two nodes aren't connected
        - true if the two nodes are connected */
     findPath(): Boolean {
-        const path: Array<MapNode> = [this.startMapNode];
+        const path: Array<MapNode> = [this.selectedBubble.mapNode];
         // The array of nodes that have been visited and led to the no-exit road
         const exceptions: Array<MapNode> = [];
         // Until the last element of the path differs from the endpoint
@@ -106,6 +105,9 @@ class GameMap {
         }
         // Colors the path
         path.forEach(i => i.nodeEl.classList.add("map-path"));
+        setTimeout(() => {
+            path.forEach(i => i.nodeEl.classList.remove("map-path"));
+        }, 1000);
         return true;
     }
 }
