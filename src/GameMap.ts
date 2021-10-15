@@ -173,7 +173,10 @@ class GameMap {
             i.forEach(j => {
                 j.removeFromMap();
                 const index: number = this.bubblesOnMap.indexOf(j);
-                index != -1 ? this.bubblesOnMap.splice(index, 1) : null;
+                if (index != -1) {
+                    this.game.increaseScore();
+                    this.bubblesOnMap.splice(index, 1);
+                }
             });
         });
     }

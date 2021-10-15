@@ -3,12 +3,20 @@ import { COLORS } from "./Constans";
 class Game {
     previewBubbles: Array<string>;
     previewEl: HTMLElement;
+    scoreEl: HTMLElement;
+    score: number = 0;
     map: GameMap;
     constructor() {
         this.map = new GameMap(9, 9, this);
         this.previewBubbles = this.drawBubbleColors(3);
         this.initPreview();
+        this.initScore();
         this.nextRound();
+    }
+    initScore() {
+        this.scoreEl = document.createElement("div");
+        this.scoreEl.innerHTML = `Points: ${this.score}`;
+        document.getElementById("app").appendChild(this.scoreEl);
     }
     initPreview() {
         this.previewEl = document.createElement("div");
@@ -44,6 +52,10 @@ class Game {
         this.map.generateBubble(this.previewBubbles);
         this.map.checkForCrushed();
         this.changePreviewBubbles(this.drawBubbleColors(3));
+    }
+    increaseScore() {
+        this.score += 1;
+        this.scoreEl.innerHTML = `Points: ${this.score}`;
     }
 }
 export default Game;
