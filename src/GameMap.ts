@@ -1,7 +1,7 @@
 import MapNode from "./MapNode";
 import Bubble from "./Bubble";
 import Game from "./Game";
-
+import { TIME } from "./Constans";
 class GameMap {
     public listOfNodes: Array<MapNode>;
     public gameMapEl: HTMLElement;
@@ -83,8 +83,8 @@ class GameMap {
     /* Function responsible for finding path between two nodes
        Returns: 
        - false if the two nodes aren't connected
-       - true if the two nodes are connected */
-    findPath(): Boolean {
+       - Array<MapNode> (path) if the two nodes are connected */
+    findPath(): Array<MapNode> | Boolean {
         const path: Array<MapNode> = [this.selectedBubble.mapNode];
         // The array of nodes that have been visited and led to the no-exit road
         const exceptions: Array<MapNode> = [];
@@ -105,12 +105,19 @@ class GameMap {
                 return false;
             }
         }
-        // Colors the path for second
-        path.forEach(i => i.nodeEl.classList.add("map-path"));
-        setTimeout(() => {
-            path.forEach(i => i.nodeEl.classList.remove("map-path"));
-        }, 1000);
-        return true;
+        return path;
+    }
+    colorPath(path: Array<MapNode>, color: string, time: number | string) {
+        if (time === TIME.always) {
+            path.forEach(i => (i.nodeEl.style.backgroundColor = color));
+        } else if (time === TIME.clear) {
+            path.forEach(i => (i.nodeEl.style.backgroundColor = null));
+        } else {
+            path.forEach(i => (i.nodeEl.style.backgroundColor = color));
+            setTimeout(() => {
+                path.forEach(i => (i.nodeEl.style.backgroundColor = null));
+            }, time as number);
+        }
     }
     checkForCrushed() {
         const answerArray: Bubble[][] = [];

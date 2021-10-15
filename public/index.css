@@ -21,9 +21,6 @@ body {
     height: 50px;
     border: 1px solid black;
 }
-.map-path {
-    background-color: red;
-}
 .bubble {
     border: 1px solid black;
     width: 60%;
