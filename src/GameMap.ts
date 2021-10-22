@@ -104,14 +104,14 @@ class GameMap {
                 arrayOfSameColor[3].push(this.bubblesOnMap.find(j => j.mapNode.y == i.mapNode.y + iterator && j.mapNode.x == i.mapNode.x + iterator));
                 iterator++;
             }
-            //y+ x-
+            //y- x+
             iterator = 1;
-            while (this.bubblesOnMap.find(j => j.mapNode.y == i.mapNode.y + iterator && j.mapNode.x == i.mapNode.x - iterator)?.color === baseColor) {
-                arrayOfSameColor[2].push(this.bubblesOnMap.find(j => j.mapNode.y == i.mapNode.y + iterator && j.mapNode.x == i.mapNode.x - iterator));
+            while (this.bubblesOnMap.find(j => j.mapNode.y == i.mapNode.y - iterator && j.mapNode.x == i.mapNode.x + iterator)?.color === baseColor) {
+                arrayOfSameColor[2].push(this.bubblesOnMap.find(j => j.mapNode.y == i.mapNode.y - iterator && j.mapNode.x == i.mapNode.x + iterator));
                 iterator++;
             }
             arrayOfSameColor.forEach(i => {
-                i.length >= 3 ? answerArray.push(i) : null;
+                i.length >= this.game.quantityToCrush ? answerArray.push(i) : null;
             });
         });
         answerArray.forEach(i => {

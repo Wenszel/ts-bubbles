@@ -21,29 +21,26 @@ class MapNode implements MapObject {
             if (!this.map.selectedBubble) {
                 const bubble = this.map.bubblesOnMap.find(i => i.mapNode == this);
                 // Checks if the bubble has possible move to do
-                if (bubble.canMakeMove()) {
+                if (bubble && bubble.canMakeMove()) {
                     this.map.selectedBubble = bubble;
                     this.map.selectedBubble?.bubbleEl.classList.toggle("selected-bubble");
                 }
             }
             // If bubble isn't selected
             else if (this == this.map.selectedBubble?.mapNode) {
-                this.map.endMapNode = this;
                 this.map.selectedBubble.bubbleEl.classList.remove("selected-bubble");
                 this.map.selectedBubble = null;
             }
             // If bubble is selected and clicked on another bubble
             else if (this.map.bubblesOnMap.find(i => i.mapNode == this)) {
-                this.map.endMapNode = this;
                 this.map.selectedBubble.bubbleEl.classList.remove("selected-bubble");
                 this.map.selectedBubble = this.map.bubblesOnMap.find(i => i.mapNode == this);
                 this.map.selectedBubble.bubbleEl.classList.toggle("selected-bubble");
             }
             // If click isn't on other bubble
             else if (!this.map.bubblesOnMap.find(i => i.mapNode == this)) {
-                this.map.endMapNode = this;
                 this.map.path = new ShortesPath(this.map.selectedBubble.mapNode, this, this.map);
-                if (this.map.path) {
+                if (this.map.path.path.length > 0) {
                     this.map.colorPath(this.map.path.path, "grey", 1000);
                     this.map.selectedBubble.moveBubble();
                     this.map.game.nextRound();

@@ -4,6 +4,7 @@ class Game {
     previewBubbles: Array<string>;
     previewEl: HTMLElement;
     scoreEl: HTMLElement;
+    quantityToCrush: number = 5;
     score: number = 0;
     map: GameMap;
     constructor() {
