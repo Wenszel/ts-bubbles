@@ -3,6 +3,7 @@ import Bubble from "./Bubble";
 import Game from "./Game";
 import ShortesPath from "./ShortesPath";
 import { TIME } from "./Constans";
+import animations from "./decorators/animations";
 
 class GameMap {
     public listOfNodes: Array<MapNode>;
@@ -22,7 +23,7 @@ class GameMap {
         this.generateMap();
     }
     // Generates bubbles on map based on given quantity
-    generateBubble(arrayOfColors: Array<string>): void {
+    public generateBubble(arrayOfColors: Array<string>): void {
         arrayOfColors.forEach(color => {
             const mapNode = this.listOfNodes[Math.floor(Math.random() * this.listOfNodes.length)];
             if (!this.bubblesOnMap.find(bubble => bubble.mapNode === mapNode)) {
@@ -31,7 +32,7 @@ class GameMap {
         });
     }
     // Function responsible for generating HTML map and array of map nodes
-    generateMap(): void {
+    private generateMap(): void {
         this.gameMapEl = document.createElement("div");
         this.gameMapEl.id = "map";
         document.getElementById("app")?.appendChild(this.gameMapEl);
@@ -42,9 +43,9 @@ class GameMap {
             }
         }
         this.listOfNodes = listOfNodes;
-        listOfNodes.forEach(node => node.findNeigbors());
+        listOfNodes.forEach(node => node.findNeighbors());
     }
-    colorPath(path: Array<MapNode>, color: string, time: number | string) {
+    public colorPath(path: Array<MapNode>, color: string, time: number | string): void {
         if (time === TIME.always) {
             path.forEach(i => (i.nodeEl.style.backgroundColor = color));
         } else if (time === TIME.clear) {
@@ -56,7 +57,7 @@ class GameMap {
             }, time as number);
         }
     }
-    checkForCrushed(): Boolean {
+    public checkForCrushed(): Boolean {
         let returnValue = false;
         const answerArray: Bubble[][] = [];
         this.bubblesOnMap.forEach(i => {

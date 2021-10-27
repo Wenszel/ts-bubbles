@@ -7,15 +7,16 @@ class ShortesPath {
     private end: MapNode;
     private steps: Array<Array<Step>> = [];
     private map: GameMap;
+    public isPath: boolean;
     public path: Array<MapNode> = [];
 
     constructor(start: MapNode, end: MapNode, map: GameMap) {
         this.start = start;
         this.end = end;
         this.map = map;
-        this.findPath();
+        this.isPath = this.findPath();
     }
-    findPath(): boolean {
+    private findPath(): boolean {
         this.steps.push([{ node: this.start, parent: null }]);
         while (!this.steps.find(i => i.find(i => i.node === this.end))) {
             this.findNextSteps();
@@ -35,7 +36,7 @@ class ShortesPath {
         this.path.push(this.start);
         return true;
     }
-    findNextSteps(): void {
+    private findNextSteps(): void {
         this.steps.push([]);
         this.steps[this.steps.length - 2].forEach(step => {
             let consideredNodes = step.node.neighbors.filter(node => {
