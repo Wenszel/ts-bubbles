@@ -1,5 +1,10 @@
 body {
     background-color: rgb(102, 102, 102);
+    text-align: center;
+}
+h1 {
+    font-size: 3rem;
+    margin-top: 100px;
 }
 #app {
     display: flex;
@@ -8,9 +13,8 @@ body {
     flex-direction: row;
 }
 #map {
+    border: 3px solid black;
     display: grid;
-    width: 450px;
-    height: 450px;
     grid-template-columns: auto auto auto auto auto auto auto auto auto;
 }
 .map-el {
@@ -22,25 +26,45 @@ body {
     border: 1px solid black;
 }
 .bubble {
-    border: 1px solid black;
-    width: 60%;
-    height: 60%;
+    border: 3px solid black;
+    width: 50%;
+    height: 50%;
     border-radius: 50%;
 }
 .preview-bubble {
-    border: 1px solid black;
+    background-color: rgb(88, 88, 88);
+    border: 3px solid black;
+    margin: 5px;
     width: 50px;
     height: 50px;
     border-radius: 50%;
 }
 #preview {
-    margin: 100px;
+    border: 3px solid black;
+    box-shadow: 0 0 5px rgba(255, 255, 255);
     display: flex;
+    justify-content: center;
+    align-items: center;
     flex-direction: row;
-    height: 100px;
-    width: 300px;
+}
+#preview > p {
+    margin: 5px;
+}
+#score {
+    margin-top: 10px;
+    padding: 5px;
+    border: 3px solid black;
+    box-shadow: 0 0 5px rgba(255, 255, 255);
+    font-size: 2rem;
 }
 .selected-bubble {
-    width: 100% !important;
-    height: 100% !important;
+    width: 80% !important;
+    height: 80% !important;
+}
+#aside {
+    margin: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }

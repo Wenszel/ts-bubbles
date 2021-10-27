@@ -24,13 +24,13 @@ class ShortesPath {
             }
         }
         let last: Step = this.steps[this.steps.length - 1].find(i => i.node === this.end);
-        this.steps.splice(this.steps.length - 1, 1);
+        this.steps.splice(-1);
         let parent: MapNode = null;
         while (this.steps.length > 0) {
             this.path.push(last.node);
             parent = last.parent;
             last = this.steps[this.steps.length - 1].find(i => i.node === parent);
-            this.steps.splice(this.steps.length - 1, 1);
+            this.steps.splice(-1);
         }
         this.path.push(this.start);
         return true;
