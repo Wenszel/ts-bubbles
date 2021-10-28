@@ -1,6 +1,8 @@
 import GameMap from "./GameMap";
 import MapNode from "./MapNode";
+import MapNodes from "./interfaces/MapNodes";
 import Step from "./interfaces/Step";
+import Performance from "./decorators/performance";
 
 class ShortesPath {
     private start: MapNode;
@@ -8,7 +10,7 @@ class ShortesPath {
     private steps: Array<Array<Step>> = [];
     private map: GameMap;
     public isPath: boolean;
-    public path: Array<MapNode> = [];
+    public path: MapNodes = [];
 
     constructor(start: MapNode, end: MapNode, map: GameMap) {
         this.start = start;
@@ -16,6 +18,7 @@ class ShortesPath {
         this.map = map;
         this.isPath = this.findPath();
     }
+    @Performance
     private findPath(): boolean {
         this.steps.push([{ node: this.start, parent: null }]);
         while (!this.steps.find(i => i.find(i => i.node === this.end))) {

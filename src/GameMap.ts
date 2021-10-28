@@ -2,11 +2,11 @@ import MapNode from "./MapNode";
 import Bubble from "./Bubble";
 import Game from "./Game";
 import ShortesPath from "./ShortesPath";
+import MapNodes from "./interfaces/MapNodes";
 import { TIME } from "./Constans";
-import animations from "./decorators/animations";
 
 class GameMap {
-    public listOfNodes: Array<MapNode>;
+    public listOfNodes: MapNodes;
     public gameMapEl: HTMLElement;
     public endMapNode: MapNode;
     public bubblesOnMap: Array<Bubble> = [];
