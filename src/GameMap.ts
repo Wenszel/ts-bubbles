@@ -3,6 +3,7 @@ import Bubble from "./Bubble";
 import Game from "./Game";
 import ShortesPath from "./ShortesPath";
 import MapNodes from "./interfaces/MapNodes";
+import Delay from "./decorators/delay";
 import { TIME } from "./Constans";
 
 class GameMap {
@@ -52,10 +53,12 @@ class GameMap {
             path.forEach(i => (i.nodeEl.style.backgroundColor = null));
         } else {
             path.forEach(i => (i.nodeEl.style.backgroundColor = color));
-            setTimeout(() => {
-                path.forEach(i => (i.nodeEl.style.backgroundColor = null));
-            }, time as number);
+            this.clearPath(path);
         }
+    }
+    @Delay(1000)
+    private clearPath(path: Array<MapNode>) {
+        path.forEach(i => (i.nodeEl.style.backgroundColor = null));
     }
     public checkForCrushed(): Boolean {
         let returnValue = false;

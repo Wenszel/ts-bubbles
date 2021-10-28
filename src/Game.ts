@@ -1,6 +1,6 @@
 import GameMap from "./GameMap";
 import { COLORS } from "./Constans";
-
+import Delay from "./decorators/delay";
 class Game {
     private previewBubbles: Array<string>;
     private previewEl: HTMLElement;
