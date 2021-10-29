@@ -70,7 +70,7 @@ class MapNode implements MapObject {
             map.listOfNodes.find(i => i.y === y + 1 && i.x === x),
         ].filter(n => n);
     }
-    private findThisNodeBubble(): Bubble {
+    public findThisNodeBubble(): Bubble {
         return this.map.bubblesOnMap.find(i => i.mapNode === this);
     }
 }

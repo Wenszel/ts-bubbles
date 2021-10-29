@@ -6,16 +6,20 @@ class Game {
     private previewEl: HTMLElement;
     private scoreEl: HTMLElement;
     private asideEl: HTMLElement;
+    private startDate: number;
     private score: number = 0;
+    private quantityOfBubblesInNewRound: number = 3;
     private map: GameMap;
+    public isEnded: boolean = false;
     public readonly quantityToCrush: number = 5;
 
     constructor() {
         this.map = new GameMap(9, 9, this);
-        this.previewBubbles = this.drawBubbleColors(3);
+        this.previewBubbles = this.drawBubbleColors(this.quantityOfBubblesInNewRound);
         this.asideEl = document.createElement("div");
         this.asideEl.id = "aside";
         document.getElementById("app").appendChild(this.asideEl);
+        this.startDate = new Date().getTime();
         this.initPreview();
         this.initScore();
         this.nextRound();
@@ -63,8 +67,23 @@ class Game {
         if (!isCrushed) {
             this.map.generateBubble(this.previewBubbles);
             this.map.checkForCrushed();
-            this.changePreviewBubbles(this.drawBubbleColors(3));
+            this.changePreviewBubbles(this.drawBubbleColors(this.quantityOfBubblesInNewRound));
         }
+    }
+    public endGame(): void {
+        function msToHMS(duration: number): string {
+            let milliseconds: number | string = duration % 1000;
+            let seconds: number | string = Math.floor((duration / 1000) % 60);
+            let minutes: number | string = Math.floor((duration / (1000 * 60)) % 60);
+            let hours: number | string = Math.floor((duration / (1000 * 60 * 60)) % 24);
+            hours = hours < 10 ? "0" + hours : hours;
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+            return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
+        }
+        this.isEnded = true;
+        const time = new Date().getTime() - this.startDate;
+        alert(`Game over \nPoints: ${this.score} \nTime: ${msToHMS(time)}`);
     }
     public increaseScore(): void {
         this.score += 1;

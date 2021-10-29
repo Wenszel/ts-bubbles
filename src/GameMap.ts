@@ -26,10 +26,13 @@ class GameMap {
     // Generates bubbles on map based on given quantity
     public generateBubble(arrayOfColors: Array<string>): void {
         arrayOfColors.forEach(color => {
-            const mapNode = this.listOfNodes[Math.floor(Math.random() * this.listOfNodes.length)];
-            if (!this.bubblesOnMap.find(bubble => bubble.mapNode === mapNode)) {
+            if (this.bubblesOnMap.length !== this.listOfNodes.length && !this.game.isEnded) {
+                let mapNode = this.listOfNodes[Math.floor(Math.random() * this.listOfNodes.length)];
+                while (mapNode.findThisNodeBubble()) {
+                    mapNode = this.listOfNodes[Math.floor(Math.random() * this.listOfNodes.length)];
+                }
                 this.bubblesOnMap.push(new Bubble(mapNode, color, this));
-            }
+            } else if (this.bubblesOnMap.length === this.listOfNodes.length && !this.game.isEnded) this.game.endGame();
         });
     }
     // Function responsible for generating HTML map and array of map nodes
