@@ -1,93 +1,75 @@
 import GameMap from "./GameMap";
+import msToHMS from "./scripts/msToHMS";
 import { COLORS } from "./Constans";
-import Delay from "./decorators/delay";
-class Game {
-    private previewBubbles: Array<string>;
-    private previewEl: HTMLElement;
-    private scoreEl: HTMLElement;
-    private asideEl: HTMLElement;
-    private startDate: number;
-    private score: number = 0;
-    private quantityOfBubblesInNewRound: number = 3;
+/** Main class of app responsible for creating entire game */
+export default class Game {
     private map: GameMap;
-    public isEnded: boolean = false;
+    /** Array of current preview colors */
+    private previewBubbles: Array<string>;
+    private previewEl: HTMLElement = document.getElementById("preview");
+    private scoreEl: HTMLElement = document.getElementById("score");
+    /** Stores points which are equivalent to the number of bubbles being crushed */
+    private score: number = 0;
+    /** Stores date when the game started */
+    private readonly startDate: number = new Date().getTime();
+    /** Such number of bubbles are added to the map every round*/
+    public readonly quantityOfBubblesInNewRound: number = 3;
+    /** Such number of bubbles have to be in a row to be crushed */
     public readonly quantityToCrush: number = 5;
+    /** Is game ended (no move can be done) */
+    public isEnded: boolean = false;
 
     constructor() {
         this.map = new GameMap(9, 9, this);
-        this.previewBubbles = this.drawBubbleColors(this.quantityOfBubblesInNewRound);
-        this.asideEl = document.createElement("div");
-        this.asideEl.id = "aside";
-        document.getElementById("app").appendChild(this.asideEl);
-        this.startDate = new Date().getTime();
-        this.initPreview();
-        this.initScore();
+        this.updatePreviewEl();
         this.nextRound();
     }
-    private initScore(): void {
-        this.scoreEl = document.createElement("div");
-        this.scoreEl.id = "score";
-        this.scoreEl.innerHTML = `Points: ${this.score}`;
-        document.getElementById("aside").appendChild(this.scoreEl);
-    }
-    private initPreview(): void {
-        this.previewEl = document.createElement("div");
-        this.previewEl.id = "preview";
-        for (const color of this.previewBubbles) {
-            const previewBubble = document.createElement("div");
-            previewBubble.className = "preview-bubble";
-            previewBubble.style.backgroundColor = color;
-            this.previewEl.appendChild(previewBubble);
-        }
-        document.getElementById("aside").appendChild(this.previewEl);
-    }
-    private changePreviewBubbles(drawedColors: Array<string>): void {
+    /** Function responsible for updating previewEl with new bubbles */
+    private updatePreviewEl(): void {
         this.previewEl.innerHTML = "";
-        const pEl = document.createElement("p");
-        pEl.textContent = "Next bubbles:";
-        this.previewEl.append(pEl);
-        this.previewBubbles = drawedColors;
-        for (let color of drawedColors) {
+        this.previewBubbles = this.drawBubbleColors();
+        for (let color of this.previewBubbles) {
             const previewBubble = document.createElement("div");
             previewBubble.className = "preview-bubble";
             previewBubble.style.backgroundColor = color;
-            this.previewEl.appendChild(previewBubble);
+            this.previewEl.append(previewBubble);
         }
     }
-    private drawBubbleColors(quantity: number): Array<string> {
+    /**
+     * Function responsible for updating scoreEl with new score
+     * executed every time the bubbles is beaten
+     */
+    public updateScoreEl(): void {
+        this.score += 1;
+        this.scoreEl.innerHTML = `Points: ${this.score}`;
+    }
+    /**
+     * Draw colors for next previewEl update
+     * @returns array of colors
+     */
+    private drawBubbleColors(): Array<string> {
         const arrayOfColors: Array<string> = [];
-        for (let i = 0; i < quantity; i++) {
+        for (let i = 0; i < this.quantityOfBubblesInNewRound; i++) {
             arrayOfColors.push(COLORS[Math.floor(Math.random() * COLORS.length)]);
         }
         return arrayOfColors;
     }
+    /** Executed when player makes a move */
     public nextRound(): void {
-        let isCrushed = this.map.checkForCrushed();
         this.map.selectedBubble = null;
-        if (!isCrushed) {
-            this.map.generateBubble(this.previewBubbles);
-            this.map.checkForCrushed();
-            this.changePreviewBubbles(this.drawBubbleColors(this.quantityOfBubblesInNewRound));
+        /**
+         * Checks if the move hasn't ended with crushing bubbles
+         * if no player has another move before adding new bubbles to map
+         */
+        if (!this.map.checkForCrushed()) {
+            this.map.generateBubbles(this.previewBubbles);
+            this.updatePreviewEl();
         }
     }
-    public endGame(): void {
-        function msToHMS(duration: number): string {
-            let milliseconds: number | string = duration % 1000;
-            let seconds: number | string = Math.floor((duration / 1000) % 60);
-            let minutes: number | string = Math.floor((duration / (1000 * 60)) % 60);
-            let hours: number | string = Math.floor((duration / (1000 * 60 * 60)) % 24);
-            hours = hours < 10 ? "0" + hours : hours;
-            minutes = minutes < 10 ? "0" + minutes : minutes;
-            seconds = seconds < 10 ? "0" + seconds : seconds;
-            return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
-        }
+    /** Executed when all nodes are full */
+    public gameOver(): void {
         this.isEnded = true;
         const time = new Date().getTime() - this.startDate;
         alert(`Game over \nPoints: ${this.score} \nTime: ${msToHMS(time)}`);
     }
-    public increaseScore(): void {
-        this.score += 1;
-        this.scoreEl.innerHTML = `Points: ${this.score}`;
-    }
 }
-export default Game;

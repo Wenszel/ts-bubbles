@@ -3,7 +3,9 @@ import GameMap from "./GameMap";
 import Bubble from "./Bubble";
 import ShortesPath from "./ShortesPath";
 import { TIME } from "./Constans";
-
+/**
+ *
+ */
 class MapNode implements MapObject {
     private map: GameMap;
     public x: number;
@@ -20,10 +22,10 @@ class MapNode implements MapObject {
         this.nodeEl.onclick = () => this.handleClick();
         this.nodeEl.onmouseenter = () => this.handleMouseMove(TIME.always);
         this.nodeEl.onmouseleave = () => this.handleMouseMove(TIME.clear);
-        document.getElementById("map").append(this.nodeEl);
+        this.map.gameMapEl.append(this.nodeEl);
     }
     private handleClick(): void {
-        const bubble = this.findThisNodeBubble();
+        const bubble = this.findNodeBubble();
         this.map.endMapNode = this;
         // select
         if (!this.map.selectedBubble) {
@@ -54,8 +56,8 @@ class MapNode implements MapObject {
             }
         }
     }
-    private handleMouseMove(time: string): void {
-        if (this.map.selectedBubble && !this.findThisNodeBubble()) {
+    private handleMouseMove(time: TIME): void {
+        if (this.map.selectedBubble && !this.findNodeBubble()) {
             this.map.path = new ShortesPath(this.map.selectedBubble.mapNode, this, this.map);
             this.map.colorPath(this.map.path.path, "pink", time);
         }
@@ -70,7 +72,7 @@ class MapNode implements MapObject {
             map.listOfNodes.find(i => i.y === y + 1 && i.x === x),
         ].filter(n => n);
     }
-    public findThisNodeBubble(): Bubble {
+    public findNodeBubble(): Bubble {
         return this.map.bubblesOnMap.find(i => i.mapNode === this);
     }
 }

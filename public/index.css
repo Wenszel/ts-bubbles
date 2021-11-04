@@ -39,7 +39,7 @@ h1 {
     height: 50px;
     border-radius: 50%;
 }
-#preview {
+#preview-container {
     border: 3px solid black;
     box-shadow: 0 0 5px rgba(255, 255, 255);
     display: flex;
@@ -47,7 +47,7 @@ h1 {
     align-items: center;
     flex-direction: row;
 }
-#preview > p {
+#preview-container > p {
     margin: 5px;
 }
 #score {
