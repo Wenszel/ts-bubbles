@@ -1,10 +1,10 @@
-import MapNode from "./MapNode";
-import Bubble from "./Bubble";
-import Game from "./Game";
-import ShortesPath from "./ShortesPath";
-import MapNodes from "./interfaces/MapNodes";
-import Delay from "./decorators/delay";
-import { TIME } from "./Constans";
+import MapNode from './MapNode';
+import Bubble from './Bubble';
+import Game from './Game';
+import ShortesPath from './ShortesPath';
+import MapNodes from './interfaces/MapNodes';
+import Delay from './decorators/delay';
+import { TIME, arrayOfCords } from './Constans';
 
 /** Class representation of a map */
 class GameMap {
@@ -12,7 +12,7 @@ class GameMap {
     public listOfNodes: MapNodes = [];
     /** Stores all bubbles that are currently on map */
     public bubblesOnMap: Array<Bubble> = [];
-    public gameMapEl: HTMLElement = document.getElementById("map");
+    public gameMapEl: HTMLElement = document.getElementById('map');
     /** Currently selected bubble that can make move */
     public selectedBubble: Bubble | null;
     /** Point where selected bubble will be moved */
@@ -99,71 +99,59 @@ class GameMap {
     }
     /**
      * Function responsible for checking if any bubbles were crushed
-     * @returns If any bubbles had been crushed
+     * @returns true if any bubble had been crushed
      */
     public checkForCrushed(): Boolean {
-        let returnValue = false;
-        const answerArray: Bubble[][] = [];
+        // Stores all bubbles which are the result of the algorithm for finding the bubbles to crush
+        const arrayToCrush: Bubble[][] = [];
+        // For each bubble on the map, check if it has 5 neighbors in a row
         this.bubblesOnMap.forEach(i => {
-            let arrayOfSameColor: Bubble[][] = [[i], [i], [i], [i]];
-            let iterator = 1;
-            let baseColor = i.color;
-            // x+
-            while (this.bubblesOnMap.find(j => j.mapNode.x == i.mapNode.x + iterator && j.mapNode.y === i.mapNode.y)?.color === baseColor) {
-                arrayOfSameColor[0].push(this.bubblesOnMap.find(j => j.mapNode.x == i.mapNode.x + iterator && j.mapNode.y === i.mapNode.y));
-                iterator++;
-            }
-            // x-
-            iterator = 1;
-            while (this.bubblesOnMap.find(j => j.mapNode.x == i.mapNode.x - iterator && j.mapNode.y === i.mapNode.y)?.color === baseColor) {
-                arrayOfSameColor[0].push(this.bubblesOnMap.find(j => j.mapNode.x == i.mapNode.x - iterator && j.mapNode.y === i.mapNode.y));
-                iterator++;
-            }
-            // y+
-            iterator = 1;
-            while (this.bubblesOnMap.find(j => j.mapNode.y == i.mapNode.y + iterator && j.mapNode.x === i.mapNode.x)?.color === baseColor) {
-                arrayOfSameColor[1].push(this.bubblesOnMap.find(j => j.mapNode.y == i.mapNode.y + iterator && j.mapNode.x === i.mapNode.x));
-                iterator++;
-            }
-            //y-
-            iterator = 1;
-            while (this.bubblesOnMap.find(j => j.mapNode.y == i.mapNode.y - iterator && j.mapNode.x === i.mapNode.x)?.color === baseColor) {
-                arrayOfSameColor[1].push(this.bubblesOnMap.find(j => j.mapNode.y == i.mapNode.y - iterator && j.mapNode.x === i.mapNode.x));
-                iterator++;
-            }
-            //y+ x-
-            iterator = 1;
-            while (this.bubblesOnMap.find(j => j.mapNode.y == i.mapNode.y + iterator && j.mapNode.x == i.mapNode.x - iterator)?.color === baseColor) {
-                arrayOfSameColor[2].push(this.bubblesOnMap.find(j => j.mapNode.y == i.mapNode.y + iterator && j.mapNode.x == i.mapNode.x - iterator));
-                iterator++;
-            }
-            //y- x-
-            iterator = 1;
-            while (this.bubblesOnMap.find(j => j.mapNode.y == i.mapNode.y - iterator && j.mapNode.x == i.mapNode.x - iterator)?.color === baseColor) {
-                arrayOfSameColor[3].push(this.bubblesOnMap.find(j => j.mapNode.y == i.mapNode.y - iterator && j.mapNode.x == i.mapNode.x - iterator));
-                iterator++;
-            }
-            //y+ x+
-            iterator = 1;
-            while (this.bubblesOnMap.find(j => j.mapNode.y == i.mapNode.y + iterator && j.mapNode.x == i.mapNode.x + iterator)?.color === baseColor) {
-                arrayOfSameColor[3].push(this.bubblesOnMap.find(j => j.mapNode.y == i.mapNode.y + iterator && j.mapNode.x == i.mapNode.x + iterator));
-                iterator++;
-            }
-            //y- x+
-            iterator = 1;
-            while (this.bubblesOnMap.find(j => j.mapNode.y == i.mapNode.y - iterator && j.mapNode.x == i.mapNode.x + iterator)?.color === baseColor) {
-                arrayOfSameColor[2].push(this.bubblesOnMap.find(j => j.mapNode.y == i.mapNode.y - iterator && j.mapNode.x == i.mapNode.x + iterator));
-                iterator++;
-            }
+            // Stores all bubbles which have the same color in specific direction
+            // We initialize arrays with current bubble (i element) on index 0 because algorithm below doesn't push this bubble to the array
+            const arrayOfSameColor: Bubble[][] = [[i], [i], [i], [i]];
+            /**
+             * Finds bubble neighbor in specific direction and with the same color
+             * @param iteratorX distance from main bubble multiplayed by slope factor:
+             * 0 if we want to look only for neighbors on the Y axis
+             * -1 if we want to look left from main bubble
+             * 1 if we want to look right from main bubble
+             * @param iteratorY analogous to the iteratorX
+             */
+            const findSameColorNeighbor = (iteratorX: number, iteratorY: number) => {
+                return this.bubblesOnMap.find(
+                    j => j.mapNode.x === i.mapNode.x + iteratorX && j.mapNode.y === i.mapNode.y + iteratorY && j.color === i.color,
+                );
+            };
+            /**
+             * While findSameColorNeighbor function finds neighbors this functions pushes bubbles to arrayOfSameColor
+             * @param index axis:
+             * 0 X
+             * 1 Y
+             * 2 above X to the left from Y and below X and to the right from Y
+             * 3 below X to the left from Y and above X and to the right from Y
+             * @param iteratorX slope factor explained in findSameColorNeighbor function
+             * @param iteratorY slope factor explained in findSameColorNeighbor function
+             */
+            const pushSameColorNeighbor = (index: number, iteratorX: number, iteratorY: number) => {
+                for (let iterator = 1; findSameColorNeighbor(iterator * iteratorX, iterator * iteratorY); iterator++) {
+                    arrayOfSameColor[index].push(findSameColorNeighbor(iterator * iteratorX, iterator * iteratorY));
+                }
+            };
+            // arrayOfCords is in Constans file and it contains array of axis and slope factors explained above
+            arrayOfCords.forEach(k => pushSameColorNeighbor(...k));
+            // Checks if the array has enough array length (equal or bigger then game.quatityToCrush variable)
             arrayOfSameColor.forEach(i => {
-                i.length >= this.game.quantityToCrush ? answerArray.push(i) : null;
+                i.length >= this.game.quantityToCrush ? arrayToCrush.push(i) : null;
             });
         });
-        answerArray.forEach(i => {
+        // Variable that becomes true when break occurs
+        let returnValue: Boolean = false;
+        // Every bubble in arrayToCrush array is removed from map and score is increased
+        arrayToCrush.forEach(i => {
             i.forEach(j => {
                 j.removeFromMap();
                 const index: number = this.bubblesOnMap.indexOf(j);
-                if (index != -1) {
+                if (index !== -1) {
                     this.game.updateScoreEl();
                     this.bubblesOnMap.splice(index, 1);
                     returnValue = true;

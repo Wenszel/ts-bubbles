@@ -1,8 +1,8 @@
-import MapObject from "./interfaces/MapObject";
-import GameMap from "./GameMap";
-import Bubble from "./Bubble";
-import ShortesPath from "./ShortesPath";
-import { TIME } from "./Constans";
+import MapObject from './interfaces/MapObject';
+import GameMap from './GameMap';
+import Bubble from './Bubble';
+import ShortesPath from './ShortesPath';
+import { PATH_COLORS, TIME } from './Constans';
 /**
  *
  */
@@ -17,8 +17,8 @@ class MapNode implements MapObject {
         this.x = x;
         this.y = y;
         this.map = map;
-        this.nodeEl = document.createElement("div");
-        this.nodeEl.className = "map-el";
+        this.nodeEl = document.createElement('div');
+        this.nodeEl.className = 'map-el';
         this.nodeEl.onclick = () => this.handleClick();
         this.nodeEl.onmouseenter = () => this.handleMouseMove(TIME.always);
         this.nodeEl.onmouseleave = () => this.handleMouseMove(TIME.clear);
@@ -50,7 +50,7 @@ class MapNode implements MapObject {
         else if (!bubble) {
             this.map.path = new ShortesPath(this.map.selectedBubble.mapNode, this, this.map);
             if (this.map.path.path.length > 0) {
-                this.map.colorPath(this.map.path.path, "grey", 1000);
+                this.map.colorPath(this.map.path.path, PATH_COLORS.drawed, 1000);
                 this.map.selectedBubble.moveBubble();
                 this.map.game.nextRound();
             }
@@ -59,7 +59,7 @@ class MapNode implements MapObject {
     private handleMouseMove(time: TIME): void {
         if (this.map.selectedBubble && !this.findNodeBubble()) {
             this.map.path = new ShortesPath(this.map.selectedBubble.mapNode, this, this.map);
-            this.map.colorPath(this.map.path.path, "pink", time);
+            this.map.colorPath(this.map.path.path, PATH_COLORS.hint, time);
         }
     }
     // Function responsible for finding all MapNodes
