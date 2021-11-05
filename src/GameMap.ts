@@ -7,7 +7,7 @@ import Delay from './decorators/delay';
 import { TIME, arrayOfCords } from './Constans';
 
 /** Class representation of a map */
-class GameMap {
+export default class GameMap {
     /** Stores all map elements */
     public listOfNodes: MapNodes = [];
     /** Stores all bubbles that are currently on map */
@@ -15,8 +15,6 @@ class GameMap {
     public gameMapEl: HTMLElement = document.getElementById('map');
     /** Currently selected bubble that can make move */
     public selectedBubble: Bubble | null;
-    /** Point where selected bubble will be moved */
-    public endMapNode: MapNode;
     /** Currently drawed path on map */
     public path: ShortesPath;
     /** Reference to parent, game object */
@@ -48,7 +46,7 @@ class GameMap {
                     // While drawed node is currently full draw another node
                     do {
                         mapNode = this.listOfNodes[Math.floor(Math.random() * this.listOfNodes.length)];
-                    } while (mapNode.findNodeBubble());
+                    } while (mapNode.findBubble());
                     this.bubblesOnMap.push(new Bubble(mapNode, color, this));
                 } else {
                     this.game.gameOver();
@@ -161,4 +159,3 @@ class GameMap {
         return returnValue;
     }
 }
-export default GameMap;

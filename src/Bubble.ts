@@ -1,39 +1,49 @@
-import MapNode from "./MapNode";
-import GameMap from "./GameMap";
-
-class Bubble {
+import MapNode from './MapNode';
+import GameMap from './GameMap';
+/** Class representing bubble on mapNode */
+export default class Bubble {
+    /** Parent map node */
     public mapNode: MapNode;
-    public bubbleEl: HTMLElement;
+    /** Color of the bubble */
     public color: string;
-    public map: GameMap;
+    /** HTML representation of Bubble object*/
+    private bubbleEl: HTMLElement;
+    /** Reference to parent, map object */
+    private map: GameMap;
+
     constructor(mapNode: MapNode, color: string, map: GameMap) {
         this.mapNode = mapNode;
         this.color = color;
         this.map = map;
         this.paintOnMap();
     }
+    /** Add bubble to the HTML */
     private paintOnMap(): void {
-        this.bubbleEl = document.createElement("div");
-        this.bubbleEl.className = "bubble";
-        this.bubbleEl.style.backgroundColor = this.color;
+        this.bubbleEl = document.createElement('div');
+        this.bubbleEl.classList.add('bubble', this.color);
         this.mapNode.nodeEl.appendChild(this.bubbleEl);
     }
-    public canMakeMove(): boolean {
-        return this.mapNode.neighbors.some(i => !this.map.bubblesOnMap.find(j => i == j.mapNode));
-    }
+    /** Removes from HTML */
     public removeFromMap(): void {
         this.bubbleEl.remove();
     }
-    public reselect(): void {
-        this.bubbleEl.classList.toggle("selected-bubble");
+    /**
+     * Checks if bubble can make move -> if has any neighbor that aren't filled with bubble
+     * @returns boolean - can make move
+     */
+    public canMakeMove(): boolean {
+        return this.mapNode.neighbors.some(i => !this.map.bubblesOnMap.find(j => i == j.mapNode));
     }
-    public moveBubble(): void {
+    /** Handle bubble CSS -> if not selected adds class */
+    public reselect(): void {
+        this.bubbleEl.classList.toggle('selected-bubble');
+    }
+    /** Move bubble from one MapNode to another */
+    public moveBubble(endMapNode: MapNode): void {
         this.map.selectedBubble = null;
-        this.mapNode.nodeEl.innerHTML = "";
-        this.mapNode = this.map.endMapNode;
+        this.mapNode.nodeEl.innerHTML = '';
+        this.mapNode = endMapNode;
         this.mapNode.nodeEl.appendChild(this.bubbleEl);
-        this.bubbleEl.classList.remove("selected-bubble");
-        this.map.endMapNode = null;
+        this.bubbleEl.classList.remove('selected-bubble');
     }
 }
-export default Bubble;

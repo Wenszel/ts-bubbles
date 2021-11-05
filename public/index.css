@@ -1,5 +1,5 @@
 body {
-    background-color: rgb(102, 102, 102);
+    background-color: rgb(182, 134, 194);
     text-align: center;
 }
 h1 {
@@ -7,6 +7,7 @@ h1 {
     margin-top: 100px;
 }
 #app {
+    margin-top: 100px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -15,7 +16,8 @@ h1 {
 #map {
     border: 3px solid black;
     display: grid;
-    grid-template-columns: auto auto auto auto auto auto auto auto auto;
+    border-radius: 10px;
+    grid-template-columns: repeat(9, auto);
 }
 .map-el {
     display: flex;
@@ -78,4 +80,31 @@ h1 {
     z-index: 1;
     right: 0;
     top: 0;
+}
+.red {
+    background: radial-gradient(circle at 65% 15%, white 1px, red 3%, darkred 60%, red 100%);
+}
+.green {
+    background: radial-gradient(circle at 65% 15%, white 1px, green 3%, darkgreen 60%, green 100%);
+}
+.yellow {
+    background: radial-gradient(circle at 65% 15%, white 1px, yellow 3%, rgb(197, 184, 0) 60%, yellow 100%);
+}
+.blue {
+    background: radial-gradient(circle at 65% 15%, white 1px, aqua 3%, darkblue 60%, aqua 100%);
+}
+.purple {
+    background: radial-gradient(circle at 65% 15%, white 1px, purple 3%, rgb(77, 0, 150) 60%, purple 100%);
+}
+.grey {
+    background: radial-gradient(circle at 65% 15%, white 1px, darkgrey 3%, grey 60%, darkgrey 100%);
+}
+.black {
+    background: radial-gradient(circle at 65% 15%, white 1px, black 3%, black 60%, black 100%);
+}
+.pink {
+    background: radial-gradient(circle at 65% 15%, white 1px, pink 3%, rgb(180, 68, 184) 60%, pink 100%);
+}
+.orange {
+    background: radial-gradient(circle at 65% 15%, white 1px, orange 3%, darkorange 60%, orange 100%);
 }

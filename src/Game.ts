@@ -1,13 +1,14 @@
-import GameMap from "./GameMap";
-import msToHMS from "./scripts/msToHMS";
-import { COLORS } from "./Constans";
+import GameMap from './GameMap';
+import msToHMS from './scripts/msToHMS';
+import { COLORS } from './Constans';
+
 /** Main class of app responsible for creating entire game */
 export default class Game {
     private map: GameMap;
     /** Array of current preview colors */
     private previewBubbles: Array<string>;
-    private previewEl: HTMLElement = document.getElementById("preview");
-    private scoreEl: HTMLElement = document.getElementById("score");
+    private previewEl: HTMLElement = document.getElementById('preview');
+    private scoreEl: HTMLElement = document.getElementById('score');
     /** Stores points which are equivalent to the number of bubbles being crushed */
     private score: number = 0;
     /** Stores date when the game started */
@@ -26,12 +27,11 @@ export default class Game {
     }
     /** Function responsible for updating previewEl with new bubbles */
     private updatePreviewEl(): void {
-        this.previewEl.innerHTML = "";
+        this.previewEl.innerHTML = '';
         this.previewBubbles = this.drawBubbleColors();
         for (let color of this.previewBubbles) {
-            const previewBubble = document.createElement("div");
-            previewBubble.className = "preview-bubble";
-            previewBubble.style.backgroundColor = color;
+            const previewBubble = document.createElement('div');
+            previewBubble.classList.add('preview-bubble', color);
             this.previewEl.append(previewBubble);
         }
     }
